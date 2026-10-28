@@ -1,0 +1,15 @@
+<Project>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>WpfTreeGrid</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Bas Automation Services</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>

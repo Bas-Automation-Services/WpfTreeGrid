@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Description>A tree grid for WPF: hierarchical rows with expand/collapse, sorting and Excel-style column filters on top of the built-in DataGrid.</Description>
+    <PackageTags>wpf;treegrid;treelistview;datagrid;treeview</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WpfTreeGrid.Core\WpfTreeGrid.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WpfTreeGrid.Tests" />
+  </ItemGroup>
+
+</Project>

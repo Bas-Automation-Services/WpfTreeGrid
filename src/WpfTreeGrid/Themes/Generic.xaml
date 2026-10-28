@@ -1,0 +1,202 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:WpfTreeGrid">
+
+    <!--
+        The default look: white header with grey
+        text and lines, boxed +/- expanders, grey selection. Every style is keyed with a
+        ComponentResourceKey exposed on TreeDataGrid; define a style under the same key in app
+        resources to replace it, or base on it with BasedOn="{StaticResource {x:Static local:TreeDataGrid.CellStyleKey}}".
+    -->
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}" Color="#808080" />
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=SelectionBrush}" Color="#CDCDCD" />
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=FilteredBrush}" Color="#2B6CB0" />
+
+    <local:IndentConverter x:Key="IndentConverter" />
+    <local:BooleanToHiddenConverter x:Key="BooleanToHiddenConverter" />
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=ExpanderStyle}" TargetType="ToggleButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Width" Value="14" />
+        <Setter Property="Height" Value="14" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border Background="Transparent">
+                        <Grid Width="9" Height="9" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Rectangle Stroke="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}}"
+                                       StrokeThickness="1" Fill="Transparent" SnapsToDevicePixels="True" />
+                            <Rectangle Width="5" Height="1" Fill="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}}"
+                                       SnapsToDevicePixels="True" />
+                            <Rectangle x:Name="Vertical" Width="1" Height="5" SnapsToDevicePixels="True"
+                                       Fill="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Vertical" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="local:TreeCell">
+        <!-- Stretch leaves vertical placement to the column content, matching the other columns. -->
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:TreeCell">
+                    <DockPanel Background="Transparent">
+                        <FrameworkElement DockPanel.Dock="Left">
+                            <FrameworkElement.Width>
+                                <MultiBinding Converter="{StaticResource IndentConverter}">
+                                    <Binding Path="Node.DisplayLevel" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="Indent" RelativeSource="{RelativeSource AncestorType=local:TreeDataGrid}" />
+                                </MultiBinding>
+                            </FrameworkElement.Width>
+                        </FrameworkElement>
+                        <ToggleButton DockPanel.Dock="Left"
+                                      Style="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=ExpanderStyle}}"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding Node.IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                      Visibility="{Binding Node.ShowsExpander, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToHiddenConverter}}" />
+                        <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TreeHeaderGripperStyle" TargetType="Thumb">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="SizeWE" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Header: centred grey text, sort chevron and, where filtering is allowed, the filter button. -->
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=ColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=LineBrush}}" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="Padding" Value="6,0,4,0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <DockPanel>
+                                <Button x:Name="FilterButton"
+                                        DockPanel.Dock="Right"
+                                        Visibility="{Binding Path=Column.(local:TreeDataGrid.ShowsFilterButton), RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Focusable="False"
+                                        Cursor="Hand"
+                                        ToolTip="Filter"
+                                        Margin="4,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Command="{x:Static local:TreeDataGrid.ShowColumnFilterCommand}"
+                                        CommandParameter="{Binding Column, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="Transparent" Padding="2">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <Path Data="M 0,0 L 11,0 L 7,5 L 7,11 L 4,9 L 4,5 Z">
+                                        <Path.Style>
+                                            <Style TargetType="Path">
+                                                <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridColumnHeader}}" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Path=Column.(local:TreeDataGrid.IsColumnFiltered), RelativeSource={RelativeSource AncestorType=DataGridColumnHeader}}" Value="True">
+                                                        <Setter Property="Fill" Value="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=FilteredBrush}}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Path.Style>
+                                    </Path>
+                                </Button>
+                                <Path x:Name="SortArrow"
+                                      DockPanel.Dock="Right"
+                                      Visibility="Collapsed"
+                                      Margin="4,0,0,0"
+                                      VerticalAlignment="Center"
+                                      Data="M 0,0 L 4,4 L 8,0"
+                                      Stroke="{TemplateBinding Foreground}"
+                                      StrokeThickness="1.5" />
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </DockPanel>
+                        </Border>
+                        <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource TreeHeaderGripperStyle}" />
+                        <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource TreeHeaderGripperStyle}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="SortDirection" Value="Descending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="SortDirection" Value="Ascending">
+                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SortArrow" Property="Data" Value="M 0,4 L 4,0 L 8,4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Cell: vertically centred content, grey selection with or without focus, black current-cell border. -->
+    <Style x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=CellStyle}" TargetType="DataGridCell">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="2,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <!-- Background under the border too, so a selected row has no gaps between cells. -->
+                    <Border Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource {ComponentResourceKey TypeInTargetAssembly={x:Type local:TreeDataGrid}, ResourceId=SelectionBrush}}" />
+                <Setter Property="Foreground" Value="Black" />
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="Black" />
+            </Trigger>
+            <!-- An open editor shows white, not the selection. -->
+            <Trigger Property="IsEditing" Value="True">
+                <Setter Property="Background" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

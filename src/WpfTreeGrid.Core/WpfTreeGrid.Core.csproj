@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Description>UI-agnostic tree flattening, sorting and filtering behind WpfTreeGrid.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WpfTreeGrid.Core.Tests" />
+  </ItemGroup>
+
+</Project>

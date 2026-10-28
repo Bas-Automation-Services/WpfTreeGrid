@@ -1,0 +1,58 @@
+<UserControl x:Class="WpfTreeGrid.ColumnFilterPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="280">
+    <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+            BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+            BorderThickness="1"
+            Padding="8">
+        <StackPanel>
+            <Button Content="Sort ascending" HorizontalContentAlignment="Left" Padding="6,3" Margin="0,0,0,2" Click="OnSortAscendingClick" />
+            <Button Content="Sort descending" HorizontalContentAlignment="Left" Padding="6,3" Margin="0,0,0,8" Click="OnSortDescendingClick" />
+            <Separator Margin="0,0,0,8" />
+            <TextBlock Text="Show rows where the value" Margin="0,0,0,4" />
+            <Grid Margin="0,0,0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="FirstOperator" Width="120" DisplayMemberPath="Text" />
+                <TextBox x:Name="FirstValue" Grid.Column="1" Margin="4,0,0,0" VerticalContentAlignment="Center" />
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <RadioButton x:Name="MatchAll" Content="And" IsChecked="True" Margin="0,0,12,0" />
+                <RadioButton x:Name="MatchAny" Content="Or" />
+            </StackPanel>
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="SecondOperator" Width="120" DisplayMemberPath="Text" />
+                <TextBox x:Name="SecondValue" Grid.Column="1" Margin="4,0,0,0" VerticalContentAlignment="Center" />
+            </Grid>
+
+            <Separator Margin="0,0,0,8" />
+
+            <TextBlock Text="...or only these values" Margin="0,0,0,4" />
+            <TextBox x:Name="SearchBox" Margin="0,0,0,4" TextChanged="OnSearchChanged" />
+            <CheckBox x:Name="SelectAll" Content="(Select all)" Margin="4,2" Click="OnSelectAllClick" />
+            <ListBox x:Name="ValueList"
+                     Height="200"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Text}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                <Button Content="Clear" MinWidth="64" Margin="0,0,8,0" Click="OnClearClick" />
+                <Button Content="Cancel" MinWidth="64" Margin="0,0,8,0" Click="OnCancelClick" />
+                <Button Content="OK" MinWidth="64" Click="OnOkClick" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>
