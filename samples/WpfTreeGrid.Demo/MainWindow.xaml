@@ -58,7 +58,7 @@
                 <tg:TreeGridCheckBoxColumn MappingName="IsSelected" HeaderText="Use" Width="44" AllowFiltering="False" />
                 <tg:TreeGridTextColumn MappingName="Type" AllowEditing="False" ColumnSizer="Star" />
                 <tg:TreeGridTextColumn MappingName="Material" AllowEditing="False" ColumnSizer="Star" />
-                <tg:TreeGridNumericColumn MappingName="Mass" HeaderText="Mass (kg)" NumberDecimalDigits="3" AllowEditing="False" Width="90" />
+                <tg:TreeGridNumericColumn MappingName="Mass" HeaderText="Mass (kg)" NumberDecimalDigits="3" AllowEditing="False" Width="110" />
                 <tg:TreeGridNumericColumn MappingName="Quantity" HeaderText="Qty" NumberDecimalDigits="0" AllowEditing="False" Width="60" />
             </tg:TreeDataGrid.Columns>
         </tg:TreeDataGrid>

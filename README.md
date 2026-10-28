@@ -4,6 +4,12 @@ A tree grid for WPF: hierarchical rows with expand/collapse, sorting, Excel-styl
 filters and cell editing, built on the standard `DataGrid`. Column resizing and reordering,
 virtualization and selection come from WPF itself.
 
+![Expanding, sorting, filtering and editing in the demo](docs/images/demo.gif)
+
+| Children sort under their parent | Excel-style column filter |
+|---|---|
+| ![Tree sorted by mass](docs/images/tree.png) | ![Column filter panel](docs/images/filter.png) |
+
 ## Usage
 
 ```xml
@@ -97,7 +103,8 @@ tracked by reference, so the same instance must not appear twice in a tree.
 | `src/WpfTreeGrid.Core` | `net8.0` | Tree model, sorting and filter predicates; no WPF dependency |
 | `src/WpfTreeGrid` | `net8.0-windows` | `TreeDataGrid`, the columns, the filter popup and the theme |
 | `tests/*` | | xUnit tests: pure logic, plus STA tests of the control |
-| `samples/WpfTreeGrid.Demo` | | A 10,000-row demo; command-line switches script screenshots |
+| `samples/WpfTreeGrid.Demo` | | A 10,000-row demo |
+| `docs/capture` | | Renders the demo offscreen into the README images |
 
 ## Licence
 
