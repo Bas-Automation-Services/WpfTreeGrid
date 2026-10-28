@@ -145,6 +145,15 @@ public class FeatureTests
     }
 
     [StaFact]
+    public void WidthWorksInCompiledXaml()
+    {
+        // Compiled XAML sets Width through the dependency property, not the double setter.
+        var grid = (TreeDataGrid)Application.LoadComponent(new Uri("/WpfTreeGrid.Tests;component/CompiledColumns.xaml", UriKind.Relative));
+
+        Assert.All(grid.Columns, c => Assert.Equal(44, ((ITreeGridColumn)c).Width));
+    }
+
+    [StaFact]
     public void SortColumnDescriptionsDriveAndReflectTheSort()
     {
         var vm = new ViewModel();

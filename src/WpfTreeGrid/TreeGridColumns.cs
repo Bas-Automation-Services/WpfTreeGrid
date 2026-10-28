@@ -58,6 +58,9 @@ public static class TreeGridColumnProperties
     public static readonly DependencyProperty IsHiddenProperty = Register("IsHidden", typeof(bool), false);
     public static readonly DependencyProperty MinimumWidthProperty = Register("MinimumWidth", typeof(double), double.NaN);
     public static readonly DependencyProperty MaximumWidthProperty = Register("MaximumWidth", typeof(double), double.NaN);
+    // Compiled XAML sets Width through a dependency property found by name; without this one it
+    // finds DataGridColumn.Width (a DataGridLength) and throws on Width="44".
+    public static readonly DependencyProperty WidthProperty = Register("Width", typeof(double), double.NaN);
     public static readonly DependencyProperty ColumnSizerProperty = Register("ColumnSizer", typeof(TreeColumnSizer), TreeColumnSizer.None);
 
     private static DependencyProperty Register(string name, Type type, object? defaultValue) =>
@@ -84,6 +87,7 @@ public static class TreeGridColumnProperties
         else if (p == IsHiddenProperty) column.Visibility = (bool)e.NewValue ? Visibility.Collapsed : Visibility.Visible;
         else if (p == MinimumWidthProperty) SetOrClear(column, DataGridColumn.MinWidthProperty, (double)e.NewValue);
         else if (p == MaximumWidthProperty) SetOrClear(column, DataGridColumn.MaxWidthProperty, (double)e.NewValue);
+        else if (p == WidthProperty && !double.IsNaN((double)e.NewValue)) column.Width = (double)e.NewValue;
         else if (p == ColumnSizerProperty)
         {
             if ((TreeColumnSizer)e.NewValue == TreeColumnSizer.None) column.ClearValue(DataGridColumn.WidthProperty);
@@ -115,6 +119,7 @@ public class TreeGridTextColumn : DataGridTextColumn, ITreeGridColumn, IBindsMap
     public static readonly DependencyProperty IsHiddenProperty = TreeGridColumnProperties.IsHiddenProperty.AddOwner(typeof(TreeGridTextColumn));
     public static readonly DependencyProperty MinimumWidthProperty = TreeGridColumnProperties.MinimumWidthProperty.AddOwner(typeof(TreeGridTextColumn));
     public static readonly DependencyProperty MaximumWidthProperty = TreeGridColumnProperties.MaximumWidthProperty.AddOwner(typeof(TreeGridTextColumn));
+    public static readonly DependencyProperty WidthProperty = TreeGridColumnProperties.WidthProperty.AddOwner(typeof(TreeGridTextColumn));
     public static readonly DependencyProperty ColumnSizerProperty = TreeGridColumnProperties.ColumnSizerProperty.AddOwner(typeof(TreeGridTextColumn));
 
     private bool _ownsBinding;
@@ -248,6 +253,7 @@ public class TreeGridCheckBoxColumn : DataGridCheckBoxColumn, ITreeGridColumn, I
     public static readonly DependencyProperty IsHiddenProperty = TreeGridColumnProperties.IsHiddenProperty.AddOwner(typeof(TreeGridCheckBoxColumn));
     public static readonly DependencyProperty MinimumWidthProperty = TreeGridColumnProperties.MinimumWidthProperty.AddOwner(typeof(TreeGridCheckBoxColumn));
     public static readonly DependencyProperty MaximumWidthProperty = TreeGridColumnProperties.MaximumWidthProperty.AddOwner(typeof(TreeGridCheckBoxColumn));
+    public static readonly DependencyProperty WidthProperty = TreeGridColumnProperties.WidthProperty.AddOwner(typeof(TreeGridCheckBoxColumn));
     public static readonly DependencyProperty ColumnSizerProperty = TreeGridColumnProperties.ColumnSizerProperty.AddOwner(typeof(TreeGridCheckBoxColumn));
 
     public string? MappingName { get => (string?)GetValue(MappingNameProperty); set => SetValue(MappingNameProperty, value); }
@@ -316,6 +322,7 @@ public class TreeGridTemplateColumn : DataGridTemplateColumn, ITreeGridColumn
     public static readonly DependencyProperty IsHiddenProperty = TreeGridColumnProperties.IsHiddenProperty.AddOwner(typeof(TreeGridTemplateColumn));
     public static readonly DependencyProperty MinimumWidthProperty = TreeGridColumnProperties.MinimumWidthProperty.AddOwner(typeof(TreeGridTemplateColumn));
     public static readonly DependencyProperty MaximumWidthProperty = TreeGridColumnProperties.MaximumWidthProperty.AddOwner(typeof(TreeGridTemplateColumn));
+    public static readonly DependencyProperty WidthProperty = TreeGridColumnProperties.WidthProperty.AddOwner(typeof(TreeGridTemplateColumn));
     public static readonly DependencyProperty ColumnSizerProperty = TreeGridColumnProperties.ColumnSizerProperty.AddOwner(typeof(TreeGridTemplateColumn));
 
     public string? MappingName { get => (string?)GetValue(MappingNameProperty); set => SetValue(MappingNameProperty, value); }

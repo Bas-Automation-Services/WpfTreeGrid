@@ -1,0 +1,11 @@
+<!-- Loaded as compiled XAML (BAML), which sets properties differently from XamlReader.Parse. -->
+<tg:TreeDataGrid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:tg="clr-namespace:WpfTreeGrid;assembly=WpfTreeGrid">
+    <tg:TreeDataGrid.Columns>
+        <tg:TreeGridTextColumn MappingName="Name" Width="44" />
+        <tg:TreeGridNumericColumn MappingName="Mass" Width="44" />
+        <tg:TreeGridDateTimeColumn MappingName="Date" Width="44" />
+        <tg:TreeGridCheckBoxColumn MappingName="IsSelected" Width="44" />
+        <tg:TreeGridTemplateColumn MappingName="Name" Width="44" />
+    </tg:TreeDataGrid.Columns>
+</tg:TreeDataGrid>
